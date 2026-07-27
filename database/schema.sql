@@ -1,25 +1,27 @@
--- Enrollments (15 rows total)
-INSERT INTO Enrollments (student_id, course_id, status) VALUES
-(1, 1, 'enrolled'),
-(2, 1, 'enrolled'),
-(3, 1, 'enrolled');
+-- Part A: Database Schema
+-- Course Enrollment System
 
-INSERT INTO Enrollments (student_id, course_id, status) VALUES
-(4, 2, 'enrolled'),
-(5, 2, 'enrolled');
+CREATE TABLE Students (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    year_of_study INT NOT NULL CHECK (year_of_study BETWEEN 1 AND 5)
+);
 
-INSERT INTO Enrollments (student_id, course_id, status) VALUES
-(1, 3, 'enrolled'),
-(6, 3, 'enrolled');
+CREATE TABLE Courses (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    capacity INT NOT NULL CHECK (capacity > 0),
+    instructor_name VARCHAR(100) NOT NULL
+);
 
-INSERT INTO Enrollments (student_id, course_id, status) VALUES
-(2, 4, 'enrolled'),
-(7, 4, 'enrolled');
-
-INSERT INTO Enrollments (student_id, course_id, status) VALUES
-(1, 4, 'enrolled'),
-(2, 3, 'enrolled'),
-(3, 3, 'enrolled'),
-(4, 3, 'enrolled'),
-(5, 4, 'waitlisted'),
-(6, 1, 'waitlisted');
+CREATE TABLE Enrollments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    enrollment_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+    status VARCHAR(20) NOT NULL CHECK (status IN ('enrolled', 'waitlisted', 'cancelled')),
+    FOREIGN KEY (student_id) REFERENCES Students(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES Courses(id) ON DELETE CASCADE,
+    UNIQUE (student_id, course_id)
+);
