@@ -9,35 +9,85 @@ body {
 }
 
 .container {
-  max-width: 850px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 40px 20px;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  padding: 48px 20px;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
   color: #1a1a2e;
 }
 
-h1 {
+/* ---------- Header ---------- */
+
+.page-header {
   text-align: center;
-  margin-bottom: 8px;
-  font-size: 2.2rem;
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: #1a1a2e;
 }
 
-h1::after {
+.page-header h1::after {
   content: '';
   display: block;
-  width: 60px;
+  width: 56px;
   height: 4px;
   background: #4a90d9;
-  margin: 12px auto 0;
+  margin: 14px auto 0;
   border-radius: 2px;
 }
+
+.subtitle {
+  margin: 14px 0 0;
+  color: #667;
+  font-size: 0.95rem;
+}
+
+/* ---------- Stats bar ---------- */
+
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.stat {
+  background: white;
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.78rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Table ---------- */
 
 .courses-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  margin: 30px 0 40px;
+  margin: 0 0 40px;
   background: white;
   border-radius: 12px;
   overflow: hidden;
@@ -50,30 +100,40 @@ h1::after {
   padding: 14px 16px;
   text-align: left;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
 }
 
 .courses-table td {
-  padding: 14px 16px;
+  padding: 16px;
   border-bottom: 1px solid #eee;
+  vertical-align: top;
 }
 
 .courses-table tr:last-child td {
   border-bottom: none;
 }
 
+.courses-table tr {
+  transition: background-color 0.15s ease;
+}
+
 .courses-table tr:hover td {
   background-color: #f8f9fb;
+}
+
+.course-name {
+  font-weight: 600;
 }
 
 .status-badge {
   display: inline-block;
   padding: 3px 10px;
   border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
 }
 
 .status-full {
@@ -86,82 +146,19 @@ h1::after {
   color: #27ae60;
 }
 
-.enroll-form {
-  background: white;
-  border-radius: 12px;
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-}
-
-.enroll-form h2 {
-  margin: 0 0 5px;
-  font-size: 1.3rem;
-}
-
-.enroll-form label {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.enroll-form select {
-  padding: 10px 12px;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fafafa;
-}
-
-.enroll-form select:focus {
-  outline: none;
-  border-color: #4a90d9;
-}
-
-.enroll-form button {
-  padding: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  background: linear-gradient(135deg, #4a90d9, #357abd);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.1s, box-shadow 0.1s;
-}
-
-.enroll-form button:hover {
-  box-shadow: 0 4px 12px rgba(74, 144, 217, 0.4);
-  transform: translateY(-1px);
-}
-
-.message {
-  margin-top: 20px;
-  padding: 14px 16px;
-  background-color: #fff8e1;
-  border-left: 4px solid #ffc107;
-  border-radius: 6px;
-  font-weight: 500;
-}
-
-
-.enroll-form h2 {
-    color: #1a1a2e !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
 .seat-line {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
+
+.seat-count {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Chips ---------- */
 
 .chip-list {
   display: flex;
@@ -179,11 +176,20 @@ h1::after {
   border-radius: 14px;
   font-size: 0.78rem;
   font-weight: 500;
+  transition: background-color 0.15s ease;
+}
+
+.chip:hover {
+  background: #e2e8f0;
 }
 
 .chip-waitlist {
   background: #fff3d6;
   color: #8a6100;
+}
+
+.chip-waitlist:hover {
+  background: #ffe9b3;
 }
 
 .chip-cancel {
@@ -194,15 +200,117 @@ h1::after {
   line-height: 1;
   cursor: pointer;
   padding: 0;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 .chip-cancel:hover {
-  color: #c0392b;
+  color: white;
+  background-color: #c0392b;
 }
 
-.muted {
+.chip-cancel:focus-visible,
+select:focus-visible,
+button:focus-visible {
+  outline: 2px solid #4a90d9;
+  outline-offset: 2px;
+}
+
+.empty-state {
   color: #aaa;
   font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* ---------- Form ---------- */
+
+.enroll-form {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.enroll-form h2 {
+  margin: 0 0 5px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.enroll-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.enroll-form select {
+  padding: 10px 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  transition: border-color 0.15s ease;
+}
+
+.enroll-form select:focus {
+  outline: none;
+  border-color: #4a90d9;
+}
+
+.enroll-form button {
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  background: linear-gradient(135deg, #4a90d9, #357abd);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.enroll-form button:hover {
+  box-shadow: 0 4px 12px rgba(74, 144, 217, 0.4);
+  transform: translateY(-1px);
+}
+
+.enroll-form button:active {
+  transform: translateY(0);
+}
+
+/* ---------- Messages ---------- */
+
+.message {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  animation: message-in 0.25s ease;
+}
+
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .message-success {
@@ -221,4 +329,57 @@ h1::after {
   background-color: #fde2e2;
   border-left: 4px solid #c0392b;
   color: #a02b2b;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 640px) {
+  .stats-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .courses-table thead {
+    display: none;
+  }
+
+  .courses-table,
+  .courses-table tbody,
+  .courses-table tr,
+  .courses-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .courses-table tr {
+    padding: 12px 0;
+  }
+
+  .courses-table td {
+    border-bottom: none;
+    padding: 6px 16px;
+  }
+
+  .courses-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 4px;
+  }
+
+  .courses-table tr:not(:last-child) {
+    border-bottom: 1px solid #eee;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .message,
+  .courses-table tr,
+  .chip,
+  .enroll-form button {
+    animation: none !important;
+    transition: none !important;
+  }
 }

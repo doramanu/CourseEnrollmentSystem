@@ -27,6 +27,10 @@ function App() {
   const [selectedCourse, setSelectedCourse] = useState(initialCourses[0].id);
   const [message, setMessage] = useState({ text: '', type: '' });
 
+  const totalEnrolled = courses.reduce((sum, c) => sum + c.enrolled.length, 0);
+  const totalWaitlisted = courses.reduce((sum, c) => sum + c.waitlist.length, 0);
+  const openCourses = courses.filter((c) => c.enrolled.length < c.capacity).length;
+
   function handleEnroll(e) {
     e.preventDefault();
     const studentId = Number(selectedStudent);
@@ -61,17 +65,16 @@ function App() {
 
         const stillEnrolled = course.enrolled.filter((id) => id !== studentId);
 
-        // Promote first waitlisted student, if any
         if (course.waitlist.length > 0) {
           const [promotedId, ...restWaitlist] = course.waitlist;
           setMessage({
-            text: `${studentName(studentId)} cancelled in ${course.name}. ${studentName(promotedId)} promoted from waitlist.`,
+            text: `${studentName(studentId)} cancelled in ${course.name}. ${studentName(promotedId)} promoted from the waitlist.`,
             type: 'success',
           });
           return { ...course, enrolled: [...stillEnrolled, promotedId], waitlist: restWaitlist };
         }
 
-        setMessage({ text: `${studentName(studentId)} cancelled enrollment in ${course.name}.`, type: 'warning' });
+        setMessage({ text: `${studentName(studentId)} cancelled their enrollment in ${course.name}.`, type: 'warning' });
         return { ...course, enrolled: stillEnrolled };
       })
     );
@@ -79,15 +82,37 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Course Enrollment System</h1>
+      <header className="page-header">
+        <h1>Course Enrollment System</h1>
+        <p className="subtitle">A small enrollment dashboard for managing courses, waitlists, and capacity.</p>
+      </header>
+
+      <section className="stats-bar" aria-label="Enrollment summary">
+        <div className="stat">
+          <span className="stat-value">{courses.length}</span>
+          <span className="stat-label">Courses</span>
+        </div>
+        <div className="stat">
+          <span className="stat-value">{totalEnrolled}</span>
+          <span className="stat-label">Enrolled</span>
+        </div>
+        <div className="stat">
+          <span className="stat-value">{totalWaitlisted}</span>
+          <span className="stat-label">Waitlisted</span>
+        </div>
+        <div className="stat">
+          <span className="stat-value">{openCourses}</span>
+          <span className="stat-label">Open courses</span>
+        </div>
+      </section>
 
       <table className="courses-table">
         <thead>
           <tr>
-            <th>Course</th>
-            <th>Instructor</th>
-            <th>Enrolled</th>
-            <th>Waitlist</th>
+            <th scope="col">Course</th>
+            <th scope="col">Instructor</th>
+            <th scope="col">Enrolled</th>
+            <th scope="col">Waitlist</th>
           </tr>
         </thead>
         <tbody>
@@ -97,11 +122,13 @@ function App() {
             const badgeText = isFull ? 'FULL' : 'OPEN';
             return (
               <tr key={course.id}>
-                <td>{course.name}</td>
-                <td>{course.instructor}</td>
-                <td>
+                <td data-label="Course">
+                  <span className="course-name">{course.name}</span>
+                </td>
+                <td data-label="Instructor">{course.instructor}</td>
+                <td data-label="Enrolled">
                   <div className="seat-line">
-                    {course.enrolled.length} / {course.capacity}{' '}
+                    <span className="seat-count">{course.enrolled.length} / {course.capacity}</span>
                     <span className={badgeClass}>{badgeText}</span>
                   </div>
                   <div className="chip-list">
@@ -111,7 +138,7 @@ function App() {
                         <button
                           type="button"
                           className="chip-cancel"
-                          title="Cancel enrollment"
+                          aria-label={`Cancel ${studentName(id)}'s enrollment in ${course.name}`}
                           onClick={() => handleCancel(course.id, id)}
                         >
                           ×
@@ -120,9 +147,9 @@ function App() {
                     ))}
                   </div>
                 </td>
-                <td>
+                <td data-label="Waitlist">
                   {course.waitlist.length === 0 ? (
-                    <span className="muted">—</span>
+                    <span className="empty-state">No one waiting</span>
                   ) : (
                     <div className="chip-list">
                       {course.waitlist.map((id, idx) => (
@@ -142,18 +169,18 @@ function App() {
       <form onSubmit={handleEnroll} className="enroll-form">
         <h2>Enroll a Student</h2>
 
-        <label>
-          Student:
-          <select value={selectedStudent} onChange={(e) => setSelectedStudent(e.target.value)}>
+        <label htmlFor="student-select">
+          Student
+          <select id="student-select" value={selectedStudent} onChange={(e) => setSelectedStudent(e.target.value)}>
             {students.map((s) => (
               <option key={s.id} value={s.id}>{s.name}</option>
             ))}
           </select>
         </label>
 
-        <label>
-          Course:
-          <select value={selectedCourse} onChange={(e) => setSelectedCourse(e.target.value)}>
+        <label htmlFor="course-select">
+          Course
+          <select id="course-select" value={selectedCourse} onChange={(e) => setSelectedCourse(e.target.value)}>
             {courses.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
@@ -163,7 +190,13 @@ function App() {
         <button type="submit">Enroll</button>
       </form>
 
-      {message.text && <p className={`message message-${message.type}`}>{message.text}</p>}
+      <div aria-live="polite">
+        {message.text && (
+          <p className={`message message-${message.type}`} key={message.text}>
+            {message.text}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
