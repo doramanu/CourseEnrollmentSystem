@@ -5,7 +5,7 @@ const initialCourses = [
   { id: 1, name: 'Data Structures', capacity: 3, instructor: 'Dr. Rao', enrolled: [1, 2, 3], waitlist: [] },
   { id: 2, name: 'Operating Systems', capacity: 2, instructor: 'Dr. Mehta', enrolled: [4, 5], waitlist: [] },
   { id: 3, name: 'Database Systems', capacity: 4, instructor: 'Dr. Iyer', enrolled: [1, 6, 2, 3], waitlist: [] },
-  { id: 4, name: 'Web Development', capacity: 3, instructor: 'Dr. Shah', enrolled: [2, 7, 1], waitlist: [] },
+  { id: 4, name: 'Web Development', capacity: 3, instructor: 'Dr. Shah', enrolled: [2, 7], waitlist: [] },
 ];
 
 const students = [
@@ -19,11 +19,13 @@ const students = [
   { id: 8, name: 'Anjali Desai' },
 ];
 
+const studentName = (id) => students.find((s) => s.id === id)?.name ?? `Student ${id}`;
+
 function App() {
   const [courses, setCourses] = useState(initialCourses);
   const [selectedStudent, setSelectedStudent] = useState(students[0].id);
   const [selectedCourse, setSelectedCourse] = useState(initialCourses[0].id);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState({ text: '', type: '' });
 
   function handleEnroll(e) {
     e.preventDefault();
@@ -35,19 +37,42 @@ function App() {
         if (course.id !== courseId) return course;
 
         if (course.enrolled.includes(studentId)) {
-          setMessage('Student is already enrolled in ' + course.name + '.');
+          setMessage({ text: `${studentName(studentId)} is already enrolled in ${course.name}.`, type: 'error' });
           return course;
         }
         if (course.waitlist.includes(studentId)) {
-          setMessage('Student is already on the waitlist for ' + course.name + '.');
+          setMessage({ text: `${studentName(studentId)} is already on the waitlist for ${course.name}.`, type: 'error' });
           return course;
         }
         if (course.enrolled.length >= course.capacity) {
-          setMessage('Course full — added to waitlist for ' + course.name + '.');
+          setMessage({ text: `Course full — ${studentName(studentId)} added to the waitlist for ${course.name}.`, type: 'warning' });
           return { ...course, waitlist: [...course.waitlist, studentId] };
         }
-        setMessage('Enrolled successfully in ' + course.name + '.');
+        setMessage({ text: `${studentName(studentId)} enrolled successfully in ${course.name}.`, type: 'success' });
         return { ...course, enrolled: [...course.enrolled, studentId] };
+      })
+    );
+  }
+
+  function handleCancel(courseId, studentId) {
+    setCourses((prevCourses) =>
+      prevCourses.map((course) => {
+        if (course.id !== courseId) return course;
+
+        const stillEnrolled = course.enrolled.filter((id) => id !== studentId);
+
+        // Promote first waitlisted student, if any
+        if (course.waitlist.length > 0) {
+          const [promotedId, ...restWaitlist] = course.waitlist;
+          setMessage({
+            text: `${studentName(studentId)} cancelled in ${course.name}. ${studentName(promotedId)} promoted from waitlist.`,
+            type: 'success',
+          });
+          return { ...course, enrolled: [...stillEnrolled, promotedId], waitlist: restWaitlist };
+        }
+
+        setMessage({ text: `${studentName(studentId)} cancelled enrollment in ${course.name}.`, type: 'warning' });
+        return { ...course, enrolled: stillEnrolled };
       })
     );
   }
@@ -75,10 +100,39 @@ function App() {
                 <td>{course.name}</td>
                 <td>{course.instructor}</td>
                 <td>
-                  {course.enrolled.length} / {course.capacity}{' '}
-                  <span className={badgeClass}>{badgeText}</span>
+                  <div className="seat-line">
+                    {course.enrolled.length} / {course.capacity}{' '}
+                    <span className={badgeClass}>{badgeText}</span>
+                  </div>
+                  <div className="chip-list">
+                    {course.enrolled.map((id) => (
+                      <span key={id} className="chip">
+                        {studentName(id)}
+                        <button
+                          type="button"
+                          className="chip-cancel"
+                          title="Cancel enrollment"
+                          onClick={() => handleCancel(course.id, id)}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
                 </td>
-                <td>{course.waitlist.length}</td>
+                <td>
+                  {course.waitlist.length === 0 ? (
+                    <span className="muted">—</span>
+                  ) : (
+                    <div className="chip-list">
+                      {course.waitlist.map((id, idx) => (
+                        <span key={id} className="chip chip-waitlist">
+                          {idx + 1}. {studentName(id)}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </td>
               </tr>
             );
           })}
@@ -109,7 +163,7 @@ function App() {
         <button type="submit">Enroll</button>
       </form>
 
-      {message && <p className="message">{message}</p>}
+      {message.text && <p className={`message message-${message.type}`}>{message.text}</p>}
     </div>
   );
 }
