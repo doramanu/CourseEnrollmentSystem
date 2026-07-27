@@ -34,3 +34,8 @@ The code counted students with status `"waitlisted"` against the course capacity
 
 > The original code had two bugs: it used a single `=` instead of `==` for comparison, which causes a Python syntax error and crashes immediately. It also checked for `status == "waitlisted"` instead of `"enrolled"`, meaning it counted students who don't occupy a seat rather than those who do. The fix corrects the operator and the status value being checked, so `enrolled_count` now accurately reflects seats actually taken, and the function correctly returns whether the course still has room.
 
+## Edge Cases & Testing
+
+- **Empty enrollment list:** If `course.enrollments` is empty, the loop simply doesn't run, `enrolled_count` stays `0`, and the function correctly returns `True` (seats available).
+- **Missing/None status:** If a student record somehow has no `status` set, the `==` check just evaluates to `False` and skips that student safely — it won't crash.
+- **Verification:** Tested manually by creating a course with capacity `2` and 2 students marked `"enrolled"` → function correctly returned `False`. Then removed one enrollment → returned `True`.
