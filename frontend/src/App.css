@@ -1,73 +1,157 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8edf3 100%);
+  margin: 0;
+  min-height: 100vh;
+}
+
 .container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
-  font-family: system-ui, sans-serif;
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #1a1a2e;
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 8px;
+  font-size: 2.2rem;
+  color: #1a1a2e;
+}
+
+h1::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: #4a90d9;
+  margin: 12px auto 0;
+  border-radius: 2px;
 }
 
 .courses-table {
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 40px;
-}
-
-.courses-table th,
-.courses-table td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: left;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 30px 0 40px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .courses-table th {
-  background-color: #f0f0f0;
+  background-color: #1a1a2e;
+  color: white;
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.courses-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.courses-table tr:last-child td {
+  border-bottom: none;
+}
+
+.courses-table tr:hover td {
+  background-color: #f8f9fb;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-full {
+  background-color: #fde2e2;
+  color: #c0392b;
+}
+
+.status-open {
+  background-color: #dff5e1;
+  color: #27ae60;
 }
 
 .enroll-form {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.enroll-form h2 {
+  margin: 0 0 5px;
+  font-size: 1.3rem;
 }
 
 .enroll-form label {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   font-weight: 500;
+  font-size: 0.9rem;
+  color: #555;
 }
 
 .enroll-form select {
-  padding: 8px;
+  padding: 10px 12px;
   font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.enroll-form select:focus {
+  outline: none;
+  border-color: #4a90d9;
 }
 
 .enroll-form button {
-  padding: 10px;
+  padding: 12px;
   font-size: 1rem;
-  background-color: #4a90d9;
+  font-weight: 600;
+  background: linear-gradient(135deg, #4a90d9, #357abd);
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
 
 .enroll-form button:hover {
-  background-color: #357abd;
+  box-shadow: 0 4px 12px rgba(74, 144, 217, 0.4);
+  transform: translateY(-1px);
 }
 
 .message {
   margin-top: 20px;
-  padding: 12px;
-  background-color: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 5px;
-  text-align: center;
+  padding: 14px 16px;
+  background-color: #fff8e1;
+  border-left: 4px solid #ffc107;
+  border-radius: 6px;
   font-weight: 500;
+}
+
+
+.enroll-form h2 {
+    color: #1a1a2e !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import './App.css';
 
-// Mock data - mirrors our Part A seed data structure
 const initialCourses = [
   { id: 1, name: 'Data Structures', capacity: 3, instructor: 'Dr. Rao', enrolled: [1, 2, 3], waitlist: [] },
   { id: 2, name: 'Operating Systems', capacity: 2, instructor: 'Dr. Mehta', enrolled: [4, 5], waitlist: [] },
@@ -35,23 +34,19 @@ function App() {
       prevCourses.map((course) => {
         if (course.id !== courseId) return course;
 
-        // Already enrolled check
         if (course.enrolled.includes(studentId)) {
-          setMessage(`Student is already enrolled in ${course.name}.`);
+          setMessage('Student is already enrolled in ' + course.name + '.');
           return course;
         }
-        // Already waitlisted check
         if (course.waitlist.includes(studentId)) {
-          setMessage(`Student is already on the waitlist for ${course.name}.`);
+          setMessage('Student is already on the waitlist for ' + course.name + '.');
           return course;
         }
-        // Full capacity -> waitlist
         if (course.enrolled.length >= course.capacity) {
-          setMessage(`Course full — added to waitlist for ${course.name}.`);
+          setMessage('Course full — added to waitlist for ' + course.name + '.');
           return { ...course, waitlist: [...course.waitlist, studentId] };
         }
-        // Normal enrollment
-        setMessage(`Enrolled successfully in ${course.name}.`);
+        setMessage('Enrolled successfully in ' + course.name + '.');
         return { ...course, enrolled: [...course.enrolled, studentId] };
       })
     );
@@ -66,21 +61,27 @@ function App() {
           <tr>
             <th>Course</th>
             <th>Instructor</th>
-            <th>Capacity</th>
             <th>Enrolled</th>
             <th>Waitlist</th>
           </tr>
         </thead>
         <tbody>
-          {courses.map((course) => (
-            <tr key={course.id}>
-              <td>{course.name}</td>
-              <td>{course.instructor}</td>
-              <td>{course.capacity}</td>
-              <td>{course.enrolled.length}</td>
-              <td>{course.waitlist.length}</td>
-            </tr>
-          ))}
+          {courses.map((course) => {
+            const isFull = course.enrolled.length >= course.capacity;
+            const badgeClass = isFull ? 'status-badge status-full' : 'status-badge status-open';
+            const badgeText = isFull ? 'FULL' : 'OPEN';
+            return (
+              <tr key={course.id}>
+                <td>{course.name}</td>
+                <td>{course.instructor}</td>
+                <td>
+                  {course.enrolled.length} / {course.capacity}{' '}
+                  <span className={badgeClass}>{badgeText}</span>
+                </td>
+                <td>{course.waitlist.length}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 
