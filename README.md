@@ -23,21 +23,25 @@ A small Course Enrollment System built for the Arbin Instruments technical asses
 | Testing | xUnit |
 
 ## Project Structure
+
+    CourseEnrollmentSystem/
+    ├── database/
+    │   ├── schema.sql          - CREATE TABLE statements
+    │   ├── seed.sql             - Sample data
+    │   └── queries.sql          - Required SQL queries
+    ├── backend/
+    │   ├── EnrollmentSystem.Core/     - Models + EnrollmentManager
+    │   ├── EnrollmentSystem.Demo/     - Console demo
+    │   └── EnrollmentSystem.Tests/    - Unit tests
+    ├── frontend/                - React + Vite app
+    ├── docs/
+    │   └── PartD_Debug.md
+    └── NOTES.md
+
 ## How to Run
 
 ### 1. Database
-Run the SQL files in order against a MySQL or PostgreSQL instance (or a browser sandbox like [db-fiddle.com](https://www.db-fiddle.com/)):
-
-```sql
--- 1. Create tables
-SOURCE database/schema.sql;
-
--- 2. Insert sample data
-SOURCE database/seed.sql;
-
--- 3. Run the required queries
-SOURCE database/queries.sql;
-```
+Run the SQL files in order against a MySQL or PostgreSQL instance (or a browser sandbox like [db-fiddle.com](https://www.db-fiddle.com/)): `schema.sql`, then `seed.sql`, then run `queries.sql`.
 
 ### 2. Backend demo
 Requires the .NET 8 SDK.
@@ -46,8 +50,6 @@ Requires the .NET 8 SDK.
 cd backend
 dotnet run --project EnrollmentSystem.Demo
 ```
-
-This runs through enrollment, waitlisting on full capacity, duplicate enrollment handling, and cancellation with automatic promotion — with a clear message printed for each action.
 
 ### 3. Backend tests
 
@@ -79,4 +81,5 @@ Open **http://localhost:5173** in your browser.
 
 ## Author
 
+**Samruddhi Patil**
 Built for the Arbin Instruments hiring assessment.
